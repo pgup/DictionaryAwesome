@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="top|center"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.yona.dictionaryawesome.StartMenuActivity">
+    
+    <TextView
+        android:text="Dictionary Awesome app"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+       <Button
+           android:text="Play the game"
+           android:textSize="22sp"
+           android:layout_marginTop="20sp"
+           android:onClick="playTheGameClick"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content" />
+
+    <Button
+        android:text="add word"
+        android:onClick="addANewWordClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

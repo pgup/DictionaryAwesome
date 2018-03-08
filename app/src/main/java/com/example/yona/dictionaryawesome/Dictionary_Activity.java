@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,17 +31,33 @@ public class Dictionary_Activity extends AppCompatActivity {
      private Map<String,String> dictionary;
      private List<String> words;
 
+
+
      private void readFileData(){
          Scanner scan = new Scanner(getResources().openRawResource(R.raw.dictionarywords));
-         while(scan.hasNextLine()){
-             //"abate - to lessen in intensity or degree"
-             String line = scan.nextLine();
-             String[] parts = line.split(" ",2);
-             dictionary.put(parts[0],parts[1]);
-             words.add(parts[0]);
+         readFileHelper(scan);
+
+         try {
+             Scanner scan2 = new Scanner(openFileInput("added_word.txt"));
+             readFileHelper(scan2);
+         } catch (Exception e) { //was FileNotFoundException
+             e.printStackTrace();
          }
 
      }
+
+    private void readFileHelper (Scanner scan) {
+
+        while (scan.hasNextLine()) {
+            //"abate - to lessen in intensity or degree"
+            String line = scan.nextLine();
+            String[] parts = line.split(" ", 2);
+            dictionary.put(parts[0], parts[1]);
+            words.add(parts[0]);
+        }
+    }
+
+
      public void choosewords(){
          Random randy = new Random();
          int randomindex = randy.nextInt(words.size());
@@ -134,6 +151,7 @@ public class Dictionary_Activity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Wrong try again",  Toast.LENGTH_SHORT).show();
 
                 }
+                choosewords();
             }
         });
 

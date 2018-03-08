@@ -25,22 +25,32 @@ public class AddWordActivity extends AppCompatActivity {
 
     public void addThisWordClick(View view) {
         //add the given word/defn to dictioary
-        EditText newWord = (EditText) findViewById(R.id.new_word);
-        EditText newDefn = (EditText) findViewById(R.id.new_defn);
+        //get edittext widgets by id than call get text on them(just getting widgets)
+        EditText Wordwidgets = (EditText) findViewById(R.id.new_word);
+        EditText Defnwidgets = (EditText) findViewById(R.id.new_defn);
+
+        String newWord = Wordwidgets.getText().toString();
+        String newDefn = Defnwidgets.getText().toString();
 
         try {
             //SAME AS PRINTWRITER BOTHE WRITE TO FILE "OUT" IS THE SAME AS SUSTEM.OUT.PRINTLN
+            //printstream reads from openfileoutput
             PrintStream output = new PrintStream(openFileOutput("added_word.txt", MODE_PRIVATE | MODE_APPEND));
+            //println there is a line brake at the end.
             output.println(newWord + " - " + newDefn);
             output.close();
 
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         // go back to start menu
-
-
+        // returning new word and definition back to startMenu Activity
+        Intent goback = new Intent();
+        goback.putExtra("newWord", newWord);
+        goback.putExtra("newDefn", newDefn);
+        setResult(RESULT_OK,goback);
+        finish();
     }
 
 }

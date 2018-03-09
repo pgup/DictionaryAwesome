@@ -1,5 +1,8 @@
 package com.example.yona.dictionaryawesome;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,10 +33,13 @@ public class Dictionary_Activity extends AppCompatActivity {
     // a dictionary of {word -. definiton} pairs for lookup
      private Map<String,String> dictionary;
      private List<String> words;
+    private MediaPlayer mp;
+    private int points;
+    private int highScore;
 
 
 
-     private void readFileData(){
+    private void readFileData(){
          Scanner scan = new Scanner(getResources().openRawResource(R.raw.dictionarywords));
          readFileHelper(scan);
 
@@ -145,15 +151,67 @@ public class Dictionary_Activity extends AppCompatActivity {
                 String theword = textview.getText().toString();
                 String correctDefn =  dictionary.get(theword);
                 if(defnClicked.equals(correctDefn)){
-                    Toast.makeText(getApplicationContext(),"Awesome",  Toast.LENGTH_SHORT).show();
+                    points++;
+                    if(points>highScore){
+                        highScore=points;
+
+                        SharedPreferences prefs = getSharedPreferences(
+                                "myprefs", MODE_PRIVATE);
+                        SharedPreferences.Editor prefsEditor = prefs.edit();
+                        prefsEditor.putInt("highScore",highScore);
+                        prefsEditor.apply();
+
+                    }
+                    Toast.makeText(getApplicationContext(),"Awesome = " +points + "hi =" + highScore,  Toast.LENGTH_SHORT).show();
 
                 }else{
-                    Toast.makeText(getApplicationContext(),"Wrong try again",  Toast.LENGTH_SHORT).show();
+                    points--;
+                    Toast.makeText(getApplicationContext(),"Wrong try again = " +points+ "hi =" + highScore,  Toast.LENGTH_SHORT).show();
 
                 }
                 choosewords();
             }
         });
+        //Load the high Score
+        SharedPreferences prefs = getSharedPreferences("myprefs",MODE_PRIVATE);
+        highScore = prefs.getInt("highScore", 0);
 
+
+        mp = MediaPlayer.create(this, R.raw.jeopardythemesong);
+        mp.start();
+
+    }
+
+    // stops the music once we move away from the game
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        mp.stop();
+    }
+
+    // resume the music once we return
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mp.start();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("points",points);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        points = savedInstanceState.getInt("points",0);
+    }
+
+    public void addAWorkClick(View view) {
+        // go to the add word activity
+        Intent intent = new Intent(this,AddWordActivity.class);
+        startActivity(intent);
     }
 }
